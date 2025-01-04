@@ -81,3 +81,30 @@ res = res.dropna()
 res = res.sort_values('business_name')
 res
 ```
+
+### [Ring Central | Medium | Call Declines](https://platform.stratascratch.com/coding/2020-call-declines?code_type=2)
+
+Which company had the biggest month call decline from March to April 2020? Return the company_id and calls difference for the company with the highest decline.
+
+```python
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+rc_calls.head()
+rc_users.head()
+# Merging the tables so that all data is in one table
+res = rc_calls.merge(rc_users, on = 'user_id', how = 'inner')
+res['month'] = res['date'].dt.month
+# Filtering for March and April dates
+res_filt = res[(res['month'] == 3) | (res['month'] == 4)]
+# Counting calls in each month by company id
+res_filt_mar = res_filt[res_filt['month'] == 3].groupby('company_id')['user_id'].count().reset_index()
+res_filt_apr = res_filt[res_filt['month'] == 4].groupby('company_id')['user_id'].count().reset_index()
+# Merging March and April count tables to find out the difference in call count 
+res_filt_fin = res_filt_mar.merge(res_filt_apr, on = 'company_id', how = 'inner', suffixes = ('_mar', '_apr'))
+res_filt_fin['call_dif'] = res_filt_fin['user_id_mar'] - res_filt_fin['user_id_apr']
+# Showing the company with maximum number of call decrease from March to April
+res_filt_fin[res_filt_fin['call_dif'] == res_filt_fin['call_dif'].max()][['company_id', 'call_dif']]
+```
+
