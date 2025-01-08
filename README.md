@@ -107,4 +107,17 @@ res_filt_fin['call_dif'] = res_filt_fin['user_id_mar'] - res_filt_fin['user_id_a
 # Showing the company with maximum number of call decrease from March to April
 res_filt_fin[res_filt_fin['call_dif'] == res_filt_fin['call_dif'].max()][['company_id', 'call_dif']]
 ```
+### [Uber | Medium | Total Monatery Value Per Month/Service](https://platform.stratascratch.com/coding/2047-total-monatery-value-per-monthservice?code_type=2)
 
+Find the total monetary value for completed orders by service type for every month. Output your result as a pivot table where there is a column for month and columns for each service type.
+
+```python
+# Import your libraries
+import pandas as pd
+import numpy as np
+# Start writing code
+uber_orders.head()
+res = uber_orders[uber_orders['status_of_order'] == 'Completed']
+res['month'] = res['order_date'].dt.month
+res = pd.pivot_table(res, values = 'monetary_value', index = 'month', columns = 'service_name', aggfunc = np.sum).reset_index()
+```
